@@ -8,66 +8,51 @@ window.addEventListener("load", function() {
      let copilotNameInput = document.querySelector("input[name=copilotName]");
      let fuelLevelInput = document.querySelector("input[name=fuelLevel]");
      let cargoMassInput = document.querySelector("input[name=cargoMass]");
- 
      let inputReady = true
+     let cargoMass = Number(cargoMassInput.value);
+     let launchReady = true;
+     let fuelLevel = Number(fuelLevelInput.value);
  
      if (pilotNameInput.value === "" || copilotNameInput.value === "" || fuelLevelInput.value === "" || cargoMassInput.value === "") {
        alert("All fields are required!");
        inputReady = false;
-     } else if (typeof pilotNameInput.value !== 'string') {
-       alert("Please enter a valid pilot name (string)");
-       inputReady = false;
-     } else if (typeof copilotNameInput.value !== 'string') {
-       alert("Please enter a valid co-pilot name (string)");
-       inputReady = false;
-     } else if (isNaN(fuelLevelInput.value)) {
-       alert('Please enter a valid fuel level (number)');
-       inputReady = false;
-     } else if (isNaN(cargoMassInput.value)) {
-       alert('Please enter a valid cargo mass (number)');
+      } else if (!isNaN(Number(pilotNameInput.value)) || !isNaN(Number(copilotNameInput.value)) || isNaN(Number(cargoMassInput.value)) || isNaN(Number(fuelLevelInput.value))) {
+         alert("Make sure to enter valid information for each field!");
        inputReady = false;
      } else {
        inputReady = true;
+       let pilotStatusLi = document.querySelector("#pilotStatus");
+       let copilotStatusLi = document.querySelector("#copilotStatus");
+ 
+       pilotStatusLi.textContent = `Pilot ${pilotNameInput.value} is ready for launch.`;
+       copilotStatusLi.textContent = `Co-pilot ${copilotNameInput.value} is ready for launch.`;
+       document.querySelector('#fuelStatus').textContent = 'Fuel level high enough for launch.';
+       document.querySelector('#cargoStatus').textContent = 'Cargo mass low enough for launch.';
      }
 
      if (inputReady) {
-      let pilotStatusLi = document.querySelector("#pilotStatus");
-      let copilotStatusLi = document.querySelector("#copilotStatus");
-
-      pilotStatusLi.textContent = `Pilot ${pilotNameInput.value} is ready`;
-      copilotStatusLi.textContent = `Co-pilot ${copilotNameInput.value} is ready`;
-      document.querySelector('#fuelStatus').textContent = 'Fuel level high enough for launch';
-      document.querySelector('#cargoStatus').textContent = 'Cargo mass low enough for launch';
-
-      let launchReady = true;
-      let fuelLevel = Number(fuelLevelInput.value);
       if (fuelLevel < 10000) {
         let fuelStatusLi = document.querySelector("#fuelStatus");
-        fuelStatusLi.textContent = "Not enough fuel for journey";
+        fuelStatusLi.textContent = "Fuel level too low for launch.";
 
-        document.querySelector('#launchStatus').textContent = 'Shuttle not ready';
+        document.querySelector('#launchStatus').textContent = 'Shuttle Not Ready For Launch';
         document.querySelector('#launchStatus').style.color = "red";
 
         let faultyItemsDiv = document.querySelector("#faultyItems");
         faultyItemsDiv.style.visibility = "visible";
         launchReady = false;
-      }
-
-      let cargoMass = Number(cargoMassInput.value);
-      if (cargoMass > 10000) {
-        document.querySelector('#launchStatus').textContent = 'Shuttle not ready';
+      } else if (cargoMass > 10000) {
+        document.querySelector('#launchStatus').textContent = 'Shuttle Not Ready For Launch';
         document.querySelector('#launchStatus').style.color = "red";
-        document.querySelector('#cargoStatus').textContent = "Cargo mass too great for takeoff";
+        document.querySelector('#cargoStatus').textContent = "Cargo mass too great for launch.";
         let faultyItemsDiv = document.querySelector("#faultyItems");
         faultyItemsDiv.style.visibility = "visible";
         launchReady = false;
-      }
-
-     if (launchReady) {
-      document.querySelector("#launchStatus").style.color = "green";
-      document.querySelector('#launchStatus').textContent = 'Shuttle is ready for launch';
-      let faultyItemsDiv = document.querySelector("#faultyItems");
-      faultyItemsDiv.style.visibility = "visible";
+      } else if (launchReady = true) {
+         document.querySelector("#launchStatus").style.color = "green";
+         document.querySelector('#launchStatus').textContent = 'Shuttle Ready For Launch';
+         let faultyItemsDiv = document.querySelector("#faultyItems");
+         faultyItemsDiv.style.visibility = "visible";
     }
 
   }
@@ -78,10 +63,10 @@ let missionTargetDiv = document.querySelector("#missionTarget")
 const url = 'https://handlers.education.launchcode.org/static/planets.json'
 fetch(url).then(function(response) {
   return response.json()
-}).then(function(myJson) {
-  console.log(myJson)
+}).then(function(randomPlanet) {
+  console.log(randomPlanet)
 
-  let myPlanet = myJson[Math.floor(Math.random() * myJson.length)]
+  let myPlanet = randomPlanet[Math.floor(Math.random() * randomPlanet.length)]
   missionTargetDiv.innerHTML =
     `<h2>Mission Destination</h2>
   <ol>
